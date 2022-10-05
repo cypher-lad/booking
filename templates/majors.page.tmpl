@@ -30,8 +30,7 @@
 {{end}}
 
 {{define "js"}}
-
-        let attention = Prompt();
+<script>
 
         document.getElementById('make-reservation').addEventListener('click', function(){
 
@@ -54,4 +53,5 @@
 
         attention.custom({msg: html, title: "Choose your dates"});
         });
+</script>
         {{end}}

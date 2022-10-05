@@ -30,8 +30,9 @@
 {{end}}
 
 {{define "js"}}
+<script>
 
-    let attention = Prompt();
+
 
     document.getElementById('make-reservation').addEventListener('click', function(){
 
@@ -52,6 +53,28 @@
         </form>
     `
 
-    attention.custom({msg: html, title: "Choose your dates"});
+    attention.custom({
+            msg: html,
+            title: "Choose your dates",
+            callback: function(result){
+                console.log("called")
+
+                let form = document.getElementById("check-availability-form");
+                let formData = new FormData(form);
+                formData.append("csrf_token", "{{.CSRFToken}}");
+                
+                fetch('/search-availability-json', {
+                    method: "post",
+                    body: formData,
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        console.log(data.ok);
+                        console.log(data.message);
+                    })
+            }
+        });
     });
+</script>
 {{end}}

@@ -1,6 +1,9 @@
 package handlers
 
 import (
+	"encoding/json"
+	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/cypher-lad/booking/pkg/config"
@@ -33,7 +36,7 @@ func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
 	remoteIP := r.RemoteAddr
 	m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
 
-	render.RenderTemplate(w, "home.page.tmpl", &models.TemplateData{})
+	render.RenderTemplate(w, "home.page.tmpl", &models.TemplateData{}, r)
 }
 
 // About is the about page handler
@@ -47,7 +50,7 @@ func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
 
 	render.RenderTemplate(w, "about.page.tmpl", &models.TemplateData{
 		StringMap: stringMap,
-	})
+	}, r)
 }
 
 // Generals is the Generals Quarters page handler
@@ -55,7 +58,7 @@ func (m *Repository) Generals(w http.ResponseWriter, r *http.Request) {
 	remoteIP := r.RemoteAddr
 	m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
 
-	render.RenderTemplate(w, "generals.page.tmpl", &models.TemplateData{})
+	render.RenderTemplate(w, "generals.page.tmpl", &models.TemplateData{}, r)
 }
 
 // Majors is the Majors Suite page handler
@@ -63,7 +66,7 @@ func (m *Repository) Majors(w http.ResponseWriter, r *http.Request) {
 	remoteIP := r.RemoteAddr
 	m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
 
-	render.RenderTemplate(w, "majors.page.tmpl", &models.TemplateData{})
+	render.RenderTemplate(w, "majors.page.tmpl", &models.TemplateData{}, r)
 }
 
 // MakeReservation is the Make Reservation page handler
@@ -71,7 +74,7 @@ func (m *Repository) MakeReservation(w http.ResponseWriter, r *http.Request) {
 	remoteIP := r.RemoteAddr
 	m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
 
-	render.RenderTemplate(w, "make-reservation.page.tmpl", &models.TemplateData{})
+	render.RenderTemplate(w, "make-reservation.page.tmpl", &models.TemplateData{}, r)
 }
 
 // SearchAvailability is the Search Availability page handler
@@ -79,7 +82,38 @@ func (m *Repository) SearchAvailability(w http.ResponseWriter, r *http.Request) 
 	remoteIP := r.RemoteAddr
 	m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
 
-	render.RenderTemplate(w, "search-availability.page.tmpl", &models.TemplateData{})
+	render.RenderTemplate(w, "search-availability.page.tmpl", &models.TemplateData{}, r)
+}
+
+// PostAvailability is the handler that will handle post request to Search Availability
+func (m *Repository) PostAvailability(w http.ResponseWriter, r *http.Request) {
+	start := r.Form.Get("start")
+	end := r.Form.Get("end")
+
+	w.Write([]byte(fmt.Sprintf("start date is %s and end date is %s", start, end)))
+}
+
+type jsonResponse struct {
+	OK      bool   `json:"ok"`
+	Message string `json:"message"`
+}
+
+// PostAvailabilityJSON is the handler that will handle post request to Search Availability and send JSON response
+func (m *Repository) PostAvailabilityJSON(w http.ResponseWriter, r *http.Request) {
+	resp := jsonResponse{
+		OK:      false,
+		Message: "Available!",
+	}
+
+	out, err := json.MarshalIndent(resp, "", "     ")
+	if err != nil {
+		log.Println(err)
+	}
+
+	log.Println(string(out))
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(out)
 }
 
 // Contact is the Contact page handler
@@ -87,5 +121,5 @@ func (m *Repository) Contact(w http.ResponseWriter, r *http.Request) {
 	remoteIP := r.RemoteAddr
 	m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
 
-	render.RenderTemplate(w, "contact.page.tmpl", &models.TemplateData{})
+	render.RenderTemplate(w, "contact.page.tmpl", &models.TemplateData{}, r)
 }
