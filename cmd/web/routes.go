@@ -1,10 +1,10 @@
 package main
 
 import (
+	"github.com/cypher-lad/booking/internal/config"
+	"github.com/cypher-lad/booking/internal/handlers"
 	"net/http"
 
-	"github.com/cypher-lad/booking/pkg/config"
-	"github.com/cypher-lad/booking/pkg/handlers"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )

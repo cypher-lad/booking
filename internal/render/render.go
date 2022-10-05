@@ -2,14 +2,13 @@ package render
 
 import (
 	"bytes"
+	"github.com/cypher-lad/booking/internal/config"
+	"github.com/cypher-lad/booking/internal/models"
 	"github.com/justinas/nosurf"
 	"log"
 	"net/http"
 	"path/filepath"
 	"text/template"
-
-	"github.com/cypher-lad/booking/pkg/config"
-	"github.com/cypher-lad/booking/pkg/models"
 )
 
 var app *config.AppConfig

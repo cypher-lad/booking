@@ -3,12 +3,11 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/cypher-lad/booking/internal/config"
+	"github.com/cypher-lad/booking/internal/models"
+	"github.com/cypher-lad/booking/internal/render"
 	"log"
 	"net/http"
-
-	"github.com/cypher-lad/booking/pkg/config"
-	"github.com/cypher-lad/booking/pkg/models"
-	"github.com/cypher-lad/booking/pkg/render"
 )
 
 // Repo the repository used by the handlers

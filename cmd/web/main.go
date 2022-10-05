@@ -2,14 +2,14 @@ package main
 
 import (
 	"fmt"
+	"github.com/cypher-lad/booking/internal/config"
+	"github.com/cypher-lad/booking/internal/handlers"
+	"github.com/cypher-lad/booking/internal/render"
 	"log"
 	"net/http"
 	"time"
 
 	"github.com/alexedwards/scs/v2"
-	"github.com/cypher-lad/booking/pkg/config"
-	"github.com/cypher-lad/booking/pkg/handlers"
-	"github.com/cypher-lad/booking/pkg/render"
 )
 
 const portNumber = ":8080"
