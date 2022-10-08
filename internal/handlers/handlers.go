@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/cypher-lad/booking/internal/config"
+	"github.com/cypher-lad/booking/internal/forms"
 	"github.com/cypher-lad/booking/internal/models"
 	"github.com/cypher-lad/booking/internal/render"
 	"log"
@@ -68,12 +69,49 @@ func (m *Repository) Majors(w http.ResponseWriter, r *http.Request) {
 	render.RenderTemplate(w, "majors.page.tmpl", &models.TemplateData{}, r)
 }
 
-// MakeReservation is the Make Reservation page handler
-func (m *Repository) MakeReservation(w http.ResponseWriter, r *http.Request) {
+// Reservation is the Make Reservation page handler
+func (m *Repository) Reservation(w http.ResponseWriter, r *http.Request) {
 	remoteIP := r.RemoteAddr
 	m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
 
-	render.RenderTemplate(w, "make-reservation.page.tmpl", &models.TemplateData{}, r)
+	render.RenderTemplate(w, "make-reservation.page.tmpl", &models.TemplateData{
+		Form: forms.New(nil),
+	}, r)
+}
+
+// PostReservation handles the posting of a reservation form
+func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	reservation := models.Reservation{
+		FirstName: r.Form.Get("first_name"),
+		LastName:  r.Form.Get("last_name"),
+		Email:     r.Form.Get("email"),
+		Phone:     r.Form.Get("phone"),
+	}
+
+	form := forms.New(r.PostForm)
+
+	form.Has("first_name", r)
+	form.Has("last_name", r)
+	form.Has("phone", r)
+	form.Has("email", r)
+
+	if !form.Valid() {
+		data := make(map[string]interface{})
+		data["reservation"] = reservation
+
+		render.RenderTemplate(w, "make-reservation.page.tmpl", &models.TemplateData{
+			Form: form,
+			Data: data,
+		}, r)
+
+		return
+	}
 }
 
 // SearchAvailability is the Search Availability page handler
